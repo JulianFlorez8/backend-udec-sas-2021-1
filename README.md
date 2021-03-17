@@ -1,5 +1,7 @@
 # backend-udec-sas-2021-1
 
+Backend del proyecto final de la materia Programación 3 2021-1. Realizado por los estudiantes Julián Andrés Flórez Cendales y Miguel Ángel Restrepo Henao
+
 This application is generated using [LoopBack 4 CLI](https://loopback.io/doc/en/lb4/Command-line-interface.html) with the
 [initial project layout](https://loopback.io/doc/en/lb4/Loopback-application-layout.html).
 
