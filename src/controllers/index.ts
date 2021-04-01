@@ -13,3 +13,8 @@ export * from './proyectos-bloque.controller';
 export * from './bloque-proyectos.controller';
 export * from './bloque-inmueble.controller';
 export * from './inmueble-bloque.controller';
+export * from './cliente-inmueble.controller';
+export * from './pais-ciudad.controller';
+export * from './ciudad-pais.controller';
+export * from './solicitud-estudio-pagos.controller';
+export * from './pagos-solicitud-estudio.controller';

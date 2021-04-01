@@ -1,6 +1,8 @@
-import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, model, property, hasMany} from '@loopback/repository';
 import {Ciudad} from './ciudad.model';
 import {Usuarios} from './usuarios.model';
+import {Inmueble} from './inmueble.model';
+import {SolicitudEstudio} from './solicitud-estudio.model';
 
 @model({
   settings: {
@@ -111,6 +113,9 @@ export class Cliente extends Entity {
 
   @belongsTo(() => Ciudad, {name: 'pertenece'})
   codigoCiudad: number;
+
+  @hasMany(() => Inmueble, {through: {model: () => SolicitudEstudio, keyFrom: 'documentoCliente', keyTo: 'codigoInmueble'}})
+  inmuebles: Inmueble[];
 
   constructor(data?: Partial<Cliente>) {
     super(data);

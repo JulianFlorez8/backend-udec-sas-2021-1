@@ -1,10 +1,11 @@
 import {inject, Getter} from '@loopback/core';
-import {DefaultCrudRepository, repository, HasManyRepositoryFactory} from '@loopback/repository';
+import {DefaultCrudRepository, repository, HasManyRepositoryFactory, BelongsToAccessor} from '@loopback/repository';
 import {MysqldsDataSource} from '../datasources';
-import {Ciudad, CiudadRelations, Usuarios, Cliente, Proyectos} from '../models';
+import {Ciudad, CiudadRelations, Usuarios, Cliente, Proyectos, Pais} from '../models';
 import {UsuariosRepository} from './usuarios.repository';
 import {ClienteRepository} from './cliente.repository';
 import {ProyectosRepository} from './proyectos.repository';
+import {PaisRepository} from './pais.repository';
 
 export class CiudadRepository extends DefaultCrudRepository<
   Ciudad,
@@ -18,10 +19,14 @@ export class CiudadRepository extends DefaultCrudRepository<
 
   public readonly proyectos: HasManyRepositoryFactory<Proyectos, typeof Ciudad.prototype.codigo>;
 
+  public readonly tiene: BelongsToAccessor<Pais, typeof Ciudad.prototype.codigo>;
+
   constructor(
-    @inject('datasources.mysqlds') dataSource: MysqldsDataSource, @repository.getter('UsuariosRepository') protected usuariosRepositoryGetter: Getter<UsuariosRepository>, @repository.getter('ClienteRepository') protected clienteRepositoryGetter: Getter<ClienteRepository>, @repository.getter('ProyectosRepository') protected proyectosRepositoryGetter: Getter<ProyectosRepository>,
+    @inject('datasources.mysqlds') dataSource: MysqldsDataSource, @repository.getter('UsuariosRepository') protected usuariosRepositoryGetter: Getter<UsuariosRepository>, @repository.getter('ClienteRepository') protected clienteRepositoryGetter: Getter<ClienteRepository>, @repository.getter('ProyectosRepository') protected proyectosRepositoryGetter: Getter<ProyectosRepository>, @repository.getter('PaisRepository') protected paisRepositoryGetter: Getter<PaisRepository>,
   ) {
     super(Ciudad, dataSource);
+    this.tiene = this.createBelongsToAccessorFor('tiene', paisRepositoryGetter,);
+    this.registerInclusionResolver('tiene', this.tiene.inclusionResolver);
     this.proyectos = this.createHasManyRepositoryFactoryFor('proyectos', proyectosRepositoryGetter,);
     this.registerInclusionResolver('proyectos', this.proyectos.inclusionResolver);
     this.clientes = this.createHasManyRepositoryFactoryFor('clientes', clienteRepositoryGetter,);
