@@ -7,3 +7,4 @@ export * from './bloque.model';
 export * from './proyectos.model';
 export * from './solicitud-estudio.model';
 export * from './pagos.model';
+export * from './solicitud-estudio.model';

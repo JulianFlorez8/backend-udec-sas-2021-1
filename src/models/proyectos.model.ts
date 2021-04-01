@@ -1,6 +1,26 @@
-import {Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, model, property, hasMany} from '@loopback/repository';
+import {Ciudad} from './ciudad.model';
+import {Usuarios} from './usuarios.model';
+import {Bloque} from './bloque.model';
 
-@model()
+@model({
+  settings: {
+    foreignKeys: {
+      fk_usuario_Id: {
+        name: 'fk_usuarios_Id',
+        entity: 'Usuarios',
+        entityKey: 'documento',
+        foreignKey: 'documentoUsuario',
+      },
+      fk_ciudad_codigo2: {
+        name: 'fk_ciudad_codigo2',
+        entity: 'Ciudad',
+        entityKey: 'codigo',
+        foreignKey: 'codigoCiudad',
+      },
+    },
+  },
+})
 export class Proyectos extends Entity {
   @property({
     type: 'number',
@@ -25,6 +45,14 @@ export class Proyectos extends Entity {
   })
   imagen?: string;
 
+  @belongsTo(() => Usuarios, {name: 'administra'})
+  documentoUsuario: number;
+
+  @belongsTo(() => Ciudad, {name: 'pertenece'})
+  codigoCiudad: number;
+
+  @hasMany(() => Bloque, {keyTo: 'codigoProyecto'})
+  bloques: Bloque[];
 
   constructor(data?: Partial<Proyectos>) {
     super(data);

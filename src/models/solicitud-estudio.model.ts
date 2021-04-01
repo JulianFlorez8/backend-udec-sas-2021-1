@@ -3,20 +3,24 @@ import {Entity, model, property} from '@loopback/repository';
 @model()
 export class SolicitudEstudio extends Entity {
   @property({
-    type: 'date',
-    required: true,
+    type: 'number',
+    id: true,
+    generated: true,
   })
-  fecha_solicitud: string;
+  codigo?: number;
+
+  @property({
+    type: 'date',
+  })
+  fechaSolicitud?: string;
 
   @property({
     type: 'number',
-    required: true,
   })
-  oferta_economica: number;
+  ofertaEconomica?: number;
 
   @property({
     type: 'string',
-    default: "En estudio",
   })
   estado?: string;
 
