@@ -3,7 +3,7 @@ import {
   Entity,
   hasMany,
   model,
-  property,
+  property
 } from '@loopback/repository';
 import {Ciudad} from './ciudad.model';
 import {Cliente} from './cliente.model';
@@ -43,10 +43,9 @@ export class Usuarios extends Entity {
   @property({
     type: 'number',
     id: true,
-    generated: true,
-    required: false,
+    required: true,
   })
-  Documento?: number;
+  Documento: number;
 
   @property({
     type: 'string',
@@ -72,9 +71,9 @@ export class Usuarios extends Entity {
 
   @property({
     type: 'string',
-    required: true,
+
   })
-  Contrasena: string;
+  Contrasena?: string;
 
   @property({
     type: 'string',

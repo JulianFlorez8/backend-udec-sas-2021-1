@@ -4,27 +4,31 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
+import {generate} from 'generate-password'; //IMPORTAR PAQUETE PARA GENERACION DE CONTRASEÑA
 import {Usuarios} from '../models';
 import {UsuariosRepository} from '../repositories';
-
-export class UsuarioController {
+export class UsuariosController {
   constructor(
     @repository(UsuariosRepository)
-    public usuariosRepository : UsuariosRepository,
-  ) {}
+    public usuariosRepository: UsuariosRepository,
+  ) { }
 
   @post('/usuarios')
   @response(200, {
@@ -37,13 +41,21 @@ export class UsuarioController {
         'application/json': {
           schema: getModelSchemaRef(Usuarios, {
             title: 'NewUsuarios',
-            exclude: ['Documento'],
+
           }),
         },
       },
     })
-    usuarios: Omit<Usuarios, 'Documento'>,
+    usuarios: Usuarios,
   ): Promise<Usuarios> {
+    let pass = generate({
+      length: 10,
+      numbers: true,
+      uppercase: true,
+      lowercase: true
+    });
+
+    usuarios.Contrasena = pass
     return this.usuariosRepository.create(usuarios);
   }
 
