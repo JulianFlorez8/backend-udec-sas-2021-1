@@ -6,8 +6,8 @@ import {
   property,
 } from '@loopback/repository';
 import {Ciudad} from './ciudad.model';
-import {Proyectos} from './proyectos.model';
 import {Cliente} from './cliente.model';
+import {Proyectos} from './proyectos.model';
 
 @model({
   settings: {
@@ -44,6 +44,7 @@ export class Usuarios extends Entity {
     type: 'number',
     id: true,
     generated: true,
+    required: false,
   })
   Documento?: number;
 
@@ -79,7 +80,7 @@ export class Usuarios extends Entity {
     type: 'string',
     required: true,
   })
-  Ciudad: string;
+  Ciudad?: string;
 
   @belongsTo(() => Ciudad, {name: 'pertenece'})
   codigoCiudad: number;

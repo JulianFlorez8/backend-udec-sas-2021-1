@@ -17,7 +17,6 @@ export class Pagos extends Entity {
   @property({
     type: 'string',
     id: true,
-    generated: false,
     required: true,
   })
   recibo_consignacion: string;
