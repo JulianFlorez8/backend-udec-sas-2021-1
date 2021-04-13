@@ -21,9 +21,9 @@ import {
   requestBody,
   response
 } from '@loopback/rest';
-import {generate} from 'generate-password'; //IMPORTAR PAQUETE PARA GENERACION DE CONTRASEÑA
 import {Usuarios} from '../models';
 import {UsuariosRepository} from '../repositories';
+import {GeneralFuctionsService as Gservice} from '../services/general.funtions.service';
 export class UsuariosController {
   constructor(
     @repository(UsuariosRepository)
@@ -48,14 +48,10 @@ export class UsuariosController {
     })
     usuarios: Usuarios,
   ): Promise<Usuarios> {
-    let pass = generate({
-      length: 10,
-      numbers: true,
-      uppercase: true,
-      lowercase: true
-    });
-
-    usuarios.Contrasena = pass
+    let servicio = new Gservice();//Creamos un objeto tipo general servicio
+    let contrasenaA = servicio.GenerarContrasenaAleatoria();//llamamos la funcion para generar una contraseña aleatoria
+    let contrasenaCifrada = servicio.CifrarContrasena(contrasenaA);
+    usuarios.Contrasena = contrasenaA//Asignar la clave autogenerada
     return this.usuariosRepository.create(usuarios);
   }
 
