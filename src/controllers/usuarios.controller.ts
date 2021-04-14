@@ -59,7 +59,7 @@ export class UsuariosController {
     usuarios.Contrasena = contrasenaCifrada//Asignar la clave autogenerada
     let usuarioAgregado = await this.usuariosRepository.create(usuarios);
     //notificar al usuario
-    let contenido = 'Ha sido exitosamente registrado en el sistema Udec S.A.S.'
+    let contenido = `Ha sido exitosamente registrado en el sistema Udec S.A.S. <br /> sus datos de acceso son: <br /> <ul><li> Usuario: ${usuarioAgregado.Usuario}</li><li> Contraseña: ${contrasenaA}</li></ul> <br /> Bienvenido`;
     this.servicionNotificacion.EnviarEmail(usuarioAgregado.Correo, llaves.AsustoRegistroUsuario, contenido);
 
 

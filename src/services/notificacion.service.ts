@@ -13,7 +13,7 @@ export class NotificacionService {
       to: destino, // Change to your recipient
       from: llaves.CorreoOrigen, // Change to your verified sender
       subject: asusto,
-      text: contenido,
+      html: contenido,
     }
     sgMail
       .send(msg)
@@ -21,7 +21,7 @@ export class NotificacionService {
         console.log('Correo Enviado al usuario')
       })
       .catch((error: any) => {
-        console.error('Fallo el envio')
+        console.error()
       })
   }
 }
