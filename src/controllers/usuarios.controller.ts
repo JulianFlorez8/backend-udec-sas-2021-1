@@ -1,3 +1,4 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -21,13 +22,18 @@ import {
   requestBody,
   response
 } from '@loopback/rest';
+import {keys as llaves} from '../config/keys.js';
 import {Usuarios} from '../models';
 import {UsuariosRepository} from '../repositories';
-import {GeneralFuctionsService as Gservice} from '../services/general.funtions.service';
+import {GeneralFuntionsService, NotificacionService} from '../services';
 export class UsuariosController {
   constructor(
     @repository(UsuariosRepository)
     public usuariosRepository: UsuariosRepository,
+    @service(GeneralFuntionsService)
+    public GeneralFS: GeneralFuntionsService,
+    @service(NotificacionService)
+    public servicionNotificacion: NotificacionService
   ) { }
 
   @post('/usuarios')
@@ -48,11 +54,16 @@ export class UsuariosController {
     })
     usuarios: Usuarios,
   ): Promise<Usuarios> {
-    let servicio = new Gservice();//Creamos un objeto tipo general servicio
-    let contrasenaA = servicio.GenerarContrasenaAleatoria();//llamamos la funcion para generar una contraseña aleatoria
-    let contrasenaCifrada = servicio.CifrarContrasena(contrasenaA);
-    usuarios.Contrasena = contrasenaA//Asignar la clave autogenerada
-    return this.usuariosRepository.create(usuarios);
+    let contrasenaA = this.GeneralFS.GenerarContrasenaAleatoria();//llamamos la funcion para generar una contraseña aleatoria
+    let contrasenaCifrada = this.GeneralFS.CifrarContrasena(contrasenaA);
+    usuarios.Contrasena = contrasenaCifrada//Asignar la clave autogenerada
+    let usuarioAgregado = await this.usuariosRepository.create(usuarios);
+    //notificar al usuario
+    let contenido = 'Ha sido exitosamente registrado en el sistema Udec S.A.S.'
+    this.servicionNotificacion.EnviarEmail(usuarioAgregado.Correo, llaves.AsustoRegistroUsuario, contenido);
+
+
+    return usuarioAgregado;
   }
 
   @get('/usuarios/count')

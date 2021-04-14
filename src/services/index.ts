@@ -1,1 +1,3 @@
-export * from './general-funcions.service';
+export * from './general-funtions.service';
+export * from './notificacion.service';
+
