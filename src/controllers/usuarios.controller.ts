@@ -9,7 +9,7 @@ import {
 } from '@loopback/repository';
 import {
   del, get,
-  getModelSchemaRef, param,
+  getModelSchemaRef, HttpErrors, param,
 
 
   patch, post,
@@ -23,9 +23,11 @@ import {
   response
 } from '@loopback/rest';
 import {keys as llaves} from '../config/keys.js';
-import {Usuarios} from '../models';
+import {Credenciales, Usuarios} from '../models';
 import {UsuariosRepository} from '../repositories';
-import {GeneralFuntionsService, NotificacionService} from '../services';
+import {GeneralFuntionsService, JwtService, NotificacionService} from '../services';
+
+
 export class UsuariosController {
   constructor(
     @repository(UsuariosRepository)
@@ -33,7 +35,9 @@ export class UsuariosController {
     @service(GeneralFuntionsService)
     public GeneralFS: GeneralFuntionsService,
     @service(NotificacionService)
-    public servicionNotificacion: NotificacionService
+    public servicionNotificacion: NotificacionService,
+    @service(JwtService)
+    public servicioJWT: JwtService
   ) { }
 
   @post('/usuarios')
@@ -165,5 +169,37 @@ export class UsuariosController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.usuariosRepository.deleteById(id);
+  }
+
+  @post('/identificar', {
+    responses: {
+      '200': {
+        description: 'Identificacion de usuarios'
+      }
+    }
+
+  })
+  async identificar(
+    @requestBody({
+      content: {
+        'aplication/json': {
+          schema: getModelSchemaRef(Credenciales)
+        },
+      },
+    }) credenciales: Credenciales
+  ): Promise<object> {
+    let usuario = await this.usuariosRepository.findOne({where: {Usuario: credenciales.identificacion_usuario, Contrasena: credenciales.contrasena}})
+    if (usuario) {
+      //Generar token
+      let token = this.servicioJWT.CrearTokenJWT(usuario);
+      usuario.Contrasena = '';
+      return {
+        usuario: usuario,
+        token: token
+      }
+    } else {
+      throw new HttpErrors[401]("Usuario o contrasenia incorrectos")
+    }
+
   }
 }
