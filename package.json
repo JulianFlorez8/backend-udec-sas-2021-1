@@ -49,27 +49,30 @@
     "!*/__tests__"
   ],
   "dependencies": {
+    "@loopback/authentication": "^7.2.0",
     "@loopback/boot": "^3.3.1",
     "@loopback/core": "^2.15.1",
     "@loopback/repository": "^3.5.1",
     "@loopback/rest": "^9.2.1",
     "@loopback/rest-explorer": "^3.2.1",
+    "@loopback/security": "^0.4.1",
     "@loopback/service-proxy": "^3.1.1",
     "@sendgrid/mail": "^7.4.2",
     "crypto-js": "^4.0.0",
     "generate-password": "^1.6.0",
     "jsonwebtoken": "^8.5.1",
     "loopback-connector-mysql": "^5.4.4",
+    "parse-bearer-token": "^1.0.1",
     "tslib": "^2.0.0",
     "twilio": "^3.59.0"
   },
   "devDependencies": {
     "@loopback/build": "^6.3.1",
-    "source-map-support": "^0.5.19",
+    "@loopback/eslint-config": "^10.1.1",
     "@loopback/testlab": "^3.3.1",
     "@types/node": "^10.17.56",
-    "@loopback/eslint-config": "^10.1.1",
     "eslint": "^7.23.0",
+    "source-map-support": "^0.5.19",
     "typescript": "~4.2.3"
   }
 }

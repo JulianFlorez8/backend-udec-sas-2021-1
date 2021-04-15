@@ -1,15 +1,16 @@
+import {authenticate} from '@loopback/authentication';
 import {
   belongsTo,
   Entity,
   hasMany,
   model,
-  property,
+  property
 } from '@loopback/repository';
 import {Cliente} from './cliente.model';
 import {Pais} from './pais.model';
 import {Proyectos} from './proyectos.model';
 import {Usuarios} from './usuarios.model';
-
+@authenticate('admin')
 @model({
   settings: {
     foreignKeys: {

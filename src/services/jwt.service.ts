@@ -20,4 +20,10 @@ export class JwtService {
     }, claveSecreta);
     return token;
   }
+
+  //Verificar un token
+  VerificarToken(token: string) {
+    let decodificado = jwt.verify(token, llaves.llaveJWT);
+    return decodificado;
+  }
 }
