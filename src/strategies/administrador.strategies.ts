@@ -1,6 +1,6 @@
 import {AuthenticationStrategy} from '@loopback/authentication';
 import {service} from '@loopback/core';
-import {HttpErrors} from '@loopback/rest';
+import {HttpErrors, Request} from '@loopback/rest';
 import {UserProfile} from '@loopback/security';
 import parseBeaterToken from 'parse-bearer-token';
 import {JwtService} from '../services';

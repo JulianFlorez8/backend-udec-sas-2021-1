@@ -10,7 +10,7 @@ export class JwtService {
 
   CrearTokenJWT(usuario: Usuarios) {
     let claveSecreta = llaves.llaveJWT;
-    let token = jwt.sing({
+    let token = jwt.sign({
       exp: llaves.TiempoExpiracionJWT,
       data: {
         id: usuario.Documento,
