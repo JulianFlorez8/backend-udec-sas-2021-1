@@ -5,28 +5,29 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where
+  Where,
 } from '@loopback/repository';
 import {
-  del, get,
-  getModelSchemaRef, HttpErrors, param,
-
-
-  patch, post,
-
-
-
-
+  del,
+  get,
+  getModelSchemaRef,
+  HttpErrors,
+  param,
+  patch,
+  post,
   put,
-
   requestBody,
-  response
+  response,
 } from '@loopback/rest';
 import {keys as llaves} from '../config/keys.js';
 import {Credenciales, Usuarios} from '../models';
+import {ResetearClave} from '../models/resetear-clave.model.js';
 import {UsuariosRepository} from '../repositories';
-import {GeneralFuntionsService, JwtService, NotificacionService} from '../services';
-
+import {
+  GeneralFuntionsService,
+  JwtService,
+  NotificacionService,
+} from '../services';
 
 export class UsuariosController {
   constructor(
@@ -37,8 +38,8 @@ export class UsuariosController {
     @service(NotificacionService)
     public servicionNotificacion: NotificacionService,
     @service(JwtService)
-    public servicioJWT: JwtService
-  ) { }
+    public servicioJWT: JwtService,
+  ) {}
 
   @post('/usuarios')
   @response(200, {
@@ -51,21 +52,23 @@ export class UsuariosController {
         'application/json': {
           schema: getModelSchemaRef(Usuarios, {
             title: 'NewUsuarios',
-
           }),
         },
       },
     })
     usuarios: Usuarios,
   ): Promise<Usuarios> {
-    let contrasenaA = this.GeneralFS.GenerarContrasenaAleatoria();//llamamos la funcion para generar una contraseña aleatoria
+    let contrasenaA = this.GeneralFS.GenerarContrasenaAleatoria(); //llamamos la funcion para generar una contraseña aleatoria
     let contrasenaCifrada = this.GeneralFS.CifrarContrasena(contrasenaA);
-    usuarios.Contrasena = contrasenaCifrada//Asignar la clave autogenerada
+    usuarios.Contrasena = contrasenaCifrada; //Asignar la clave autogenerada
     let usuarioAgregado = await this.usuariosRepository.create(usuarios);
     //notificar al usuario
     let contenido = `Ha sido exitosamente registrado en el sistema Udec S.A.S. <br /> sus datos de acceso son: <br /> <ul><li> Usuario: ${usuarioAgregado.Usuario}</li><li> Contraseña: ${contrasenaA}</li></ul> <br /> Bienvenido`;
-    this.servicionNotificacion.EnviarEmail(usuarioAgregado.Correo, llaves.AsustoRegistroUsuario, contenido);
-
+    this.servicionNotificacion.EnviarEmail(
+      usuarioAgregado.Correo,
+      llaves.AsustoRegistroUsuario,
+      contenido,
+    );
 
     return usuarioAgregado;
   }
@@ -75,9 +78,7 @@ export class UsuariosController {
     description: 'Usuarios model count',
     content: {'application/json': {schema: CountSchema}},
   })
-  async count(
-    @param.where(Usuarios) where?: Where<Usuarios>,
-  ): Promise<Count> {
+  async count(@param.where(Usuarios) where?: Where<Usuarios>): Promise<Count> {
     return this.usuariosRepository.count(where);
   }
 
@@ -129,7 +130,8 @@ export class UsuariosController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Usuarios, {exclude: 'where'}) filter?: FilterExcludingWhere<Usuarios>
+    @param.filter(Usuarios, {exclude: 'where'})
+    filter?: FilterExcludingWhere<Usuarios>,
   ): Promise<Usuarios> {
     return this.usuariosRepository.findById(id, filter);
   }
@@ -171,35 +173,76 @@ export class UsuariosController {
     await this.usuariosRepository.deleteById(id);
   }
 
+  @post('/reset-password')
+  @response(200, {
+    description: 'Usuario model instance',
+    content: {'application/json': {schema: getModelSchemaRef(ResetearClave)}},
+  })
+  async resetPassword(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(ResetearClave),
+        },
+      },
+    })
+    resetearClave: ResetearClave,
+  ): Promise<object> {
+    let usuario = await this.usuariosRepository.findOne({
+      where: {Correo: resetearClave.correo},
+    });
+    if (!usuario) {
+      throw new HttpErrors[403]('No se encuentra el usuario.');
+    }
+    let claveAleatoria = this.GeneralFS.GenerarContrasenaAleatoria();
+    let claveCifrada = this.GeneralFS.CifrarContrasena(claveAleatoria);
+
+    usuario.Contrasena = claveCifrada;
+    await this.usuariosRepository.update(usuario);
+
+    // notificar al usuario
+    let contenido = `Hola, hemos actualizado tu contraseña.<br /> Tu nueva contraseña es: ${claveAleatoria}`;
+    let enviado = this.servicionNotificacion.EnviarEmail(
+      resetearClave.correo,
+      llaves.AsuntoActualizacionContrasena,
+      contenido,
+    );
+    return usuario;
+  }
+
   @post('/identificar', {
     responses: {
       '200': {
-        description: 'Identificacion de usuarios'
-      }
-    }
-
+        description: 'Identificacion de usuarios',
+      },
+    },
   })
   async identificar(
     @requestBody({
       content: {
         'aplication/json': {
-          schema: getModelSchemaRef(Credenciales)
+          schema: getModelSchemaRef(Credenciales),
         },
       },
-    }) credenciales: Credenciales
+    })
+    credenciales: Credenciales,
   ): Promise<object> {
-    let usuario = await this.usuariosRepository.findOne({where: {Usuario: credenciales.identificacion_usuario, Contrasena: credenciales.contrasena}})
+    let usuario = await this.usuariosRepository.findOne({
+      where: {
+        Usuario: credenciales.identificacion_usuario,
+        Contrasena: credenciales.contrasena,
+      },
+    });
     if (usuario) {
       //Generar token
       let token = this.servicioJWT.CrearTokenJWT(usuario);
       usuario.Contrasena = '';
       return {
         usuario: usuario,
-        token: token
-      }
+        token: token,
+      };
     } else {
-      throw new HttpErrors[401]("Usuario o contrasenia incorrectos")
+      throw new HttpErrors[401]('Usuario o contraseña incorrectos');
     }
-
   }
 }
