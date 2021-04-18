@@ -8,4 +8,6 @@ export namespace keys {
   export const TiempoExpiracionJWT = Date.now() / 1000 + 60 * 60 * 1; //Solo 1 hora dura
   export const twilioPhone = '+16087193658';
   export const AsuntoCambioContrasena = 'Cambio de contraseña exitoso.';
+  export const KeyCAPTCHA = 'AIzaSyDYtCrn6hOX5xd7GctkjU2IoZnF2t4rM24';
 }
+

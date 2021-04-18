@@ -235,10 +235,11 @@ export class UsuariosController {
     })
     credenciales: Credenciales,
   ): Promise<object> {
+    let claveCifrada = this.GeneralFS.CifrarContrasena(credenciales.contrasena);
     let usuario = await this.usuariosRepository.findOne({
       where: {
         Usuario: credenciales.identificacion_usuario,
-        Contrasena: credenciales.contrasena,
+        Contrasena: claveCifrada,
       },
     });
     if (usuario) {
@@ -270,8 +271,9 @@ export class UsuariosController {
     })
     cambioCont: CambioContrasena,
   ): Promise<object> {
+    let clave = this.GeneralFS.CifrarContrasena(cambioCont.antiguaContrasena);
     let usuario = await this.usuariosRepository.findOne({
-      where: {Usuario: cambioCont.usuario, Contrasena: cambioCont.antiguaContrasena},
+      where: {Usuario: cambioCont.usuario, Contrasena: clave},
     });
     if (!usuario) {
       throw new HttpErrors[403]('No se encuentra el usuario.');
