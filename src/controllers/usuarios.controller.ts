@@ -21,7 +21,7 @@ import {
   response
 } from '@loopback/rest';
 import {keys as llaves} from '../config/keys.js';
-import {Credenciales, Usuarios} from '../models';
+import {CambioContrasena, Credenciales, Usuarios} from '../models';
 import {ResetearClave} from '../models/resetear-clave.model.js';
 import {UsuariosRepository} from '../repositories';
 import {
@@ -252,5 +252,51 @@ export class UsuariosController {
     } else {
       throw new HttpErrors[401]('Usuario o contraseña incorrectos');
     }
+  }
+
+
+  @post('/cambio-contrasena')
+  @response(200, {
+    description: 'Usuario model instance',
+    content: {'application/json': {schema: getModelSchemaRef(CambioContrasena)}},
+  })
+  async cambioContrasena(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(CambioContrasena),
+        },
+      },
+    })
+    cambioCont: CambioContrasena,
+  ): Promise<object> {
+    let usuario = await this.usuariosRepository.findOne({
+      where: {Usuario: cambioCont.usuario, Contrasena: cambioCont.antiguaContrasena},
+    });
+    if (!usuario) {
+      throw new HttpErrors[403]('No se encuentra el usuario.');
+    }
+    if (cambioCont.nuevaContrasena == cambioCont.confirmarContrasena) {
+      usuario.Contrasena = cambioCont.nuevaContrasena;
+
+    }
+
+    await this.usuariosRepository.update(usuario);
+
+    // notificar al usuario
+    let contenido = `Hola, tu contraseña ha sido actualizada con exito.<br /> Tu nueva contraseña es: ${cambioCont.nuevaContrasena}`;
+    let enviado = this.servicionNotificacion.EnviarEmail(
+      usuario.Correo,
+      llaves.AsuntoActualizacionContrasena,
+      contenido,
+    );
+    let envioSmS = this.servicionNotificacion.EnviarSMS(
+      usuario.Celular,
+      contenido,
+    );
+    if (envioSmS) {
+      console.log("Sms Enviado");
+    }
+    return usuario;
   }
 }
