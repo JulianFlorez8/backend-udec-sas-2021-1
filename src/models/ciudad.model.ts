@@ -10,7 +10,7 @@ import {Cliente} from './cliente.model';
 import {Pais} from './pais.model';
 import {Proyectos} from './proyectos.model';
 import {Usuarios} from './usuarios.model';
-@authenticate('admin')
+@authenticate('administrador')
 @model({
   settings: {
     foreignKeys: {

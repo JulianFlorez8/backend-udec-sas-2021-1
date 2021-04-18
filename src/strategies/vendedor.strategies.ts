@@ -4,8 +4,8 @@ import {HttpErrors, Request} from '@loopback/rest';
 import {UserProfile} from '@loopback/security';
 import parseBeaterToken from 'parse-bearer-token';
 import {JwtService} from '../services';
-export class AdministradorStrategy implements AuthenticationStrategy {
-  name: string = 'admin';
+export class VendedorStrategy implements AuthenticationStrategy {
+  name: string = 'vendedor';
   constructor(
     @service(JwtService)
     public servicioJWT: JwtService) {
@@ -19,7 +19,7 @@ export class AdministradorStrategy implements AuthenticationStrategy {
     }
     let info = this.servicioJWT.VerificarToken(token);
     if (info) {
-      if (info.data.Rol == 'Administrador') {
+      if (info.data.Rol == 'Vendedor') {
         let perfil: UserProfile = Object.assign({
           id: info.data.Documento,
           nombre_usuario: info.data.Nombre,

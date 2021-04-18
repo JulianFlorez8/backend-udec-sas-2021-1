@@ -6,4 +6,5 @@ export namespace keys {
     'Actualización de contraseña exitosa';
   export const llaveJWT = 'Lla3Ju1@nM1guel';
   export const TiempoExpiracionJWT = Date.now() / 1000 + 60 * 60 * 1; //Solo 1 hora dura
+  export const twilioPhone = '+16087193658';
 }

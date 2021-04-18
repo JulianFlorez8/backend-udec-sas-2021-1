@@ -23,7 +23,12 @@ export class JwtService {
 
   //Verificar un token
   VerificarToken(token: string) {
-    let decodificado = jwt.verify(token, llaves.llaveJWT);
-    return decodificado;
+    try {
+      let decodificado = jwt.verify(token, llaves.llaveJWT);
+      return decodificado;
+    } catch
+    {
+      return null;
+    }
   }
 }

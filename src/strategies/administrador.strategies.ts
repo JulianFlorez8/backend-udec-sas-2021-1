@@ -5,7 +5,7 @@ import {UserProfile} from '@loopback/security';
 import parseBeaterToken from 'parse-bearer-token';
 import {JwtService} from '../services';
 export class AdministradorStrategy implements AuthenticationStrategy {
-  name: string = 'admin';
+  name: string = 'administrador';
   constructor(
     @service(JwtService)
     public servicioJWT: JwtService) {

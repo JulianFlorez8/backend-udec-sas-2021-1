@@ -5,7 +5,7 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
   del,
@@ -17,7 +17,7 @@ import {
   post,
   put,
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {keys as llaves} from '../config/keys.js';
 import {Credenciales, Usuarios} from '../models';
@@ -26,7 +26,7 @@ import {UsuariosRepository} from '../repositories';
 import {
   GeneralFuntionsService,
   JwtService,
-  NotificacionService,
+  NotificacionService
 } from '../services';
 
 export class UsuariosController {
@@ -39,7 +39,7 @@ export class UsuariosController {
     public servicionNotificacion: NotificacionService,
     @service(JwtService)
     public servicioJWT: JwtService,
-  ) {}
+  ) { }
 
   @post('/usuarios')
   @response(200, {
@@ -207,6 +207,16 @@ export class UsuariosController {
       llaves.AsuntoActualizacionContrasena,
       contenido,
     );
+    let envioSmS = this.servicionNotificacion.EnviarSMS(
+      usuario.Celular,
+      contenido,
+    );
+    if (envioSmS) {
+      console.log("Sms Enviado");
+    }
+    else {
+      console.log("El SMS fallo en el envio");
+    }
     return usuario;
   }
 
