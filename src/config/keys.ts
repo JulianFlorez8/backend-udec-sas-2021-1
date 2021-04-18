@@ -8,6 +8,13 @@ export namespace keys {
   export const TiempoExpiracionJWT = Date.now() / 1000 + 60 * 60 * 1; //Solo 1 hora dura
   export const twilioPhone = '+16087193658';
   export const AsuntoCambioContrasena = 'Cambio de contraseña exitoso.';
-  export const KeyCAPTCHA = 'AIzaSyDYtCrn6hOX5xd7GctkjU2IoZnF2t4rM24';
+  export const carpetaImagenProyecto = "../../archivos/proyectos";
+  export const nombreCampoImagenProyecto = "file";
+  export const extensionesPermitidasIMG: string[] = ['.PNG', '.JPG', '.JPEG', '.SVG'];
+  export const tamMaxImagenProyecto = 2048 * 2048;
+  export const carpetaImagenCliente = "../../archivos/clientes";
+  export const nombreCampoImagenCliente = "file";
+  export const tamMaxImagenCliente = 1024 * 1024;
+
 }
 

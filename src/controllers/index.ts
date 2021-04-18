@@ -28,3 +28,4 @@ export * from './usuarios-cliente.controller';
 export * from './usuarios-proyectos.controller';
 export * from './usuarios.controller';
 
+export * from './carga-archivos.controller';
