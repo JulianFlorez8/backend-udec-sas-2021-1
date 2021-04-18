@@ -276,15 +276,17 @@ export class UsuariosController {
     if (!usuario) {
       throw new HttpErrors[403]('No se encuentra el usuario.');
     }
+    let claveCifrada = this.GeneralFS.CifrarContrasena(cambioCont.nuevaContrasena);
     if (cambioCont.nuevaContrasena == cambioCont.confirmarContrasena) {
-      usuario.Contrasena = cambioCont.nuevaContrasena;
+
+      usuario.Contrasena = claveCifrada;
 
     }
 
     await this.usuariosRepository.update(usuario);
 
     // notificar al usuario
-    let contenido = `Hola, tu contraseña ha sido actualizada con exito.<br /> Tu nueva contraseña es: ${cambioCont.nuevaContrasena}`;
+    let contenido = `Hola, tu contraseña ha sido actualizada con exito.<br /> Tu nueva contraseña es: ${claveCifrada}`;
     let enviado = this.servicionNotificacion.EnviarEmail(
       usuario.Correo,
       llaves.AsuntoActualizacionContrasena,
