@@ -1,21 +1,26 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Pais} from '../models';
 import {PaisRepository} from '../repositories';
@@ -23,9 +28,9 @@ import {PaisRepository} from '../repositories';
 export class PaisController {
   constructor(
     @repository(PaisRepository)
-    public paisRepository : PaisRepository,
-  ) {}
-
+    public paisRepository: PaisRepository,
+  ) { }
+  @authenticate('administrador')
   @post('/pais')
   @response(200, {
     description: 'Pais model instance',
@@ -75,7 +80,7 @@ export class PaisController {
   ): Promise<Pais[]> {
     return this.paisRepository.find(filter);
   }
-
+  @authenticate('administrador')
   @patch('/pais')
   @response(200, {
     description: 'Pais PATCH success count',
@@ -94,7 +99,7 @@ export class PaisController {
   ): Promise<Count> {
     return this.paisRepository.updateAll(pais, where);
   }
-
+  @authenticate('administrador')
   @get('/pais/{id}')
   @response(200, {
     description: 'Pais model instance',
@@ -110,7 +115,7 @@ export class PaisController {
   ): Promise<Pais> {
     return this.paisRepository.findById(id, filter);
   }
-
+  @authenticate('administrador')
   @patch('/pais/{id}')
   @response(204, {
     description: 'Pais PATCH success',
@@ -128,7 +133,7 @@ export class PaisController {
   ): Promise<void> {
     await this.paisRepository.updateById(id, pais);
   }
-
+  @authenticate('administrador')
   @put('/pais/{id}')
   @response(204, {
     description: 'Pais PUT success',
@@ -139,7 +144,7 @@ export class PaisController {
   ): Promise<void> {
     await this.paisRepository.replaceById(id, pais);
   }
-
+  @authenticate('administrador')
   @del('/pais/{id}')
   @response(204, {
     description: 'Pais DELETE success',

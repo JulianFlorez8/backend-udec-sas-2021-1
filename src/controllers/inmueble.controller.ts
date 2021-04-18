@@ -1,21 +1,26 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Inmueble} from '../models';
 import {InmuebleRepository} from '../repositories';
@@ -23,9 +28,9 @@ import {InmuebleRepository} from '../repositories';
 export class InmuebleController {
   constructor(
     @repository(InmuebleRepository)
-    public inmuebleRepository : InmuebleRepository,
-  ) {}
-
+    public inmuebleRepository: InmuebleRepository,
+  ) { }
+  @authenticate('administrador')
   @post('/inmuebles')
   @response(200, {
     description: 'Inmueble model instance',
@@ -75,7 +80,7 @@ export class InmuebleController {
   ): Promise<Inmueble[]> {
     return this.inmuebleRepository.find(filter);
   }
-
+  @authenticate('administrador')
   @patch('/inmuebles')
   @response(200, {
     description: 'Inmueble PATCH success count',
@@ -94,7 +99,7 @@ export class InmuebleController {
   ): Promise<Count> {
     return this.inmuebleRepository.updateAll(inmueble, where);
   }
-
+  @authenticate('administrador')
   @get('/inmuebles/{id}')
   @response(200, {
     description: 'Inmueble model instance',
@@ -110,7 +115,7 @@ export class InmuebleController {
   ): Promise<Inmueble> {
     return this.inmuebleRepository.findById(id, filter);
   }
-
+  @authenticate('administrador')
   @patch('/inmuebles/{id}')
   @response(204, {
     description: 'Inmueble PATCH success',
@@ -128,7 +133,7 @@ export class InmuebleController {
   ): Promise<void> {
     await this.inmuebleRepository.updateById(id, inmueble);
   }
-
+  @authenticate('administrador')
   @put('/inmuebles/{id}')
   @response(204, {
     description: 'Inmueble PUT success',
@@ -139,7 +144,7 @@ export class InmuebleController {
   ): Promise<void> {
     await this.inmuebleRepository.replaceById(id, inmueble);
   }
-
+  @authenticate('administrador')
   @del('/inmuebles/{id}')
   @response(204, {
     description: 'Inmueble DELETE success',

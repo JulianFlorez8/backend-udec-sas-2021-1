@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -40,7 +41,7 @@ export class UsuariosController {
     @service(JwtService)
     public servicioJWT: JwtService,
   ) { }
-
+  @authenticate('administrador')
   @post('/usuarios')
   @response(200, {
     description: 'Usuarios model instance',
@@ -213,9 +214,6 @@ export class UsuariosController {
     );
     if (envioSmS) {
       console.log("Sms Enviado");
-    }
-    else {
-      console.log("El SMS fallo en el envio");
     }
     return usuario;
   }

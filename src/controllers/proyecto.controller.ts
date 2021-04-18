@@ -1,21 +1,26 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Proyectos} from '../models';
 import {ProyectosRepository} from '../repositories';
@@ -23,9 +28,9 @@ import {ProyectosRepository} from '../repositories';
 export class ProyectoController {
   constructor(
     @repository(ProyectosRepository)
-    public proyectosRepository : ProyectosRepository,
-  ) {}
-
+    public proyectosRepository: ProyectosRepository,
+  ) { }
+  @authenticate('administrador')
   @post('/proyectos')
   @response(200, {
     description: 'Proyectos model instance',
@@ -75,7 +80,7 @@ export class ProyectoController {
   ): Promise<Proyectos[]> {
     return this.proyectosRepository.find(filter);
   }
-
+  @authenticate('administrador')
   @patch('/proyectos')
   @response(200, {
     description: 'Proyectos PATCH success count',
@@ -94,7 +99,7 @@ export class ProyectoController {
   ): Promise<Count> {
     return this.proyectosRepository.updateAll(proyectos, where);
   }
-
+  @authenticate('administrador')
   @get('/proyectos/{id}')
   @response(200, {
     description: 'Proyectos model instance',
@@ -110,7 +115,7 @@ export class ProyectoController {
   ): Promise<Proyectos> {
     return this.proyectosRepository.findById(id, filter);
   }
-
+  @authenticate('administrador')
   @patch('/proyectos/{id}')
   @response(204, {
     description: 'Proyectos PATCH success',
@@ -128,7 +133,7 @@ export class ProyectoController {
   ): Promise<void> {
     await this.proyectosRepository.updateById(id, proyectos);
   }
-
+  @authenticate('administrador')
   @put('/proyectos/{id}')
   @response(204, {
     description: 'Proyectos PUT success',
@@ -139,7 +144,7 @@ export class ProyectoController {
   ): Promise<void> {
     await this.proyectosRepository.replaceById(id, proyectos);
   }
-
+  @authenticate('administrador')
   @del('/proyectos/{id}')
   @response(204, {
     description: 'Proyectos DELETE success',
