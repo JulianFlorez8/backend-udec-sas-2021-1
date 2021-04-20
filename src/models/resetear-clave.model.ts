@@ -6,7 +6,7 @@ export class ResetearClave extends Model {
     type: 'string',
     required: true,
   })
-  correo: string;
+  Usuario: string;
 
 
   constructor(data?: Partial<ResetearClave>) {

@@ -73,9 +73,10 @@ export class Usuarios extends Entity {
 
   @property({
     type: 'string',
+    required: true,
 
   })
-  Contrasena?: string;
+  Contrasena: string;
 
   @property({
     type: 'string',

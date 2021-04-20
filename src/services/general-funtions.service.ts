@@ -27,4 +27,9 @@ export class GeneralFuntionsService {
     return contrasenaCifrada;
 
   }
+  //Descifrado de contraseñas
+  DecifrarContrasena(contrasenaCifrada: string): string {
+    var contrasena = Crypto.AES.decrypt(contrasenaCifrada, llaves.AESKey).toString();
+    return contrasena;
+  }
 }

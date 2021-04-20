@@ -1,4 +1,3 @@
-import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -41,7 +40,7 @@ export class UsuariosController {
     @service(JwtService)
     public servicioJWT: JwtService,
   ) { }
-  @authenticate('administrador')
+  //@authenticate('administrador')
   @post('/usuarios')
   @response(200, {
     description: 'Usuarios model instance',
@@ -64,6 +63,7 @@ export class UsuariosController {
     usuarios.Contrasena = contrasenaCifrada; //Asignar la clave autogenerada
     let usuarioAgregado = await this.usuariosRepository.create(usuarios);
     //notificar al usuario
+    console.log(contrasenaA);
     let contenido = `Ha sido exitosamente registrado en el sistema Udec S.A.S. <br /> sus datos de acceso son: <br /> <ul><li> Usuario: ${usuarioAgregado.Usuario}</li><li> Contraseña: ${contrasenaA}</li></ul> <br /> Bienvenido`;
     this.servicionNotificacion.EnviarEmail(
       usuarioAgregado.Correo,
@@ -190,7 +190,7 @@ export class UsuariosController {
     resetearClave: ResetearClave,
   ): Promise<object> {
     let usuario = await this.usuariosRepository.findOne({
-      where: {Correo: resetearClave.correo},
+      where: {Usuario: resetearClave.Usuario},
     });
     if (!usuario) {
       throw new HttpErrors[403]('No se encuentra el usuario.');
@@ -200,11 +200,11 @@ export class UsuariosController {
 
     usuario.Contrasena = claveCifrada;
     await this.usuariosRepository.update(usuario);
-
+    console.log(claveAleatoria);
     // notificar al usuario
     let contenido = `Hola, hemos actualizado tu contraseña.<br /> Tu nueva contraseña es: ${claveAleatoria}`;
     let enviado = this.servicionNotificacion.EnviarEmail(
-      resetearClave.correo,
+      usuario.Correo,
       llaves.AsuntoActualizacionContrasena,
       contenido,
     );
@@ -235,21 +235,30 @@ export class UsuariosController {
     })
     credenciales: Credenciales,
   ): Promise<object> {
-    let claveCifrada = this.GeneralFS.CifrarContrasena(credenciales.contrasena);
     let usuario = await this.usuariosRepository.findOne({
       where: {
-        Usuario: credenciales.identificacion_usuario,
-        Contrasena: claveCifrada,
+        Usuario: credenciales.Usuario
       },
     });
     if (usuario) {
       //Generar token
-      let token = this.servicioJWT.CrearTokenJWT(usuario);
-      usuario.Contrasena = '';
-      return {
-        usuario: usuario,
-        token: token,
-      };
+      let contra = usuario.Contrasena;
+      let claveDecifrada = this.GeneralFS.DecifrarContrasena(contra);//decifrar clave del MySql
+      let cifrar = this.GeneralFS.CifrarContrasena(credenciales.contrasena);//Cifrar clave metida por el usuario
+      let decifrada = this.GeneralFS.DecifrarContrasena(cifrar);//Decifrar clave metida por el usuario
+      if (claveDecifrada == decifrada) {
+        let token = this.servicioJWT.CrearTokenJWT(usuario);
+        usuario.Contrasena = '';
+        return {
+          usuario: usuario,
+          token: token,
+        };
+
+      }
+      else {
+        throw new HttpErrors[401]('La contraseña es incorrecta');
+
+      }
     } else {
       throw new HttpErrors[401]('Usuario o contraseña incorrectos');
     }
@@ -272,35 +281,46 @@ export class UsuariosController {
     cambioCont: CambioContrasena,
   ): Promise<object> {
     let clave = this.GeneralFS.CifrarContrasena(cambioCont.antiguaContrasena);
+    let claveDes = this.GeneralFS.DecifrarContrasena(clave);
     let usuario = await this.usuariosRepository.findOne({
-      where: {Usuario: cambioCont.usuario, Contrasena: clave},
+      where: {Usuario: cambioCont.usuario},
     });
     if (!usuario) {
       throw new HttpErrors[403]('No se encuentra el usuario.');
     }
-    let claveCifrada = this.GeneralFS.CifrarContrasena(cambioCont.nuevaContrasena);
-    if (cambioCont.nuevaContrasena == cambioCont.confirmarContrasena) {
+    else {
 
-      usuario.Contrasena = claveCifrada;
+      let claveDescifrada = this.GeneralFS.DecifrarContrasena(usuario.Contrasena);
+      if (claveDescifrada = claveDes) {
 
+
+        let claveCifrada = this.GeneralFS.CifrarContrasena(cambioCont.nuevaContrasena);
+        if (cambioCont.nuevaContrasena == cambioCont.confirmarContrasena) {
+
+          usuario.Contrasena = claveCifrada;
+
+        }
+
+        await this.usuariosRepository.update(usuario);
+
+        // notificar al usuario
+        let contenido = `Hola, tu contraseña ha sido actualizada con exito.<br /> Tu nueva contraseña es: ${cambioCont.nuevaContrasena}`;
+        let enviado = this.servicionNotificacion.EnviarEmail(
+          usuario.Correo,
+          llaves.AsuntoActualizacionContrasena,
+          contenido,
+        );
+        let envioSmS = this.servicionNotificacion.EnviarSMS(
+          usuario.Celular,
+          contenido,
+        );
+        if (envioSmS) {
+          console.log("Sms Enviado");
+        }
+      }
     }
 
-    await this.usuariosRepository.update(usuario);
-
-    // notificar al usuario
-    let contenido = `Hola, tu contraseña ha sido actualizada con exito.<br /> Tu nueva contraseña es: ${claveCifrada}`;
-    let enviado = this.servicionNotificacion.EnviarEmail(
-      usuario.Correo,
-      llaves.AsuntoActualizacionContrasena,
-      contenido,
-    );
-    let envioSmS = this.servicionNotificacion.EnviarSMS(
-      usuario.Celular,
-      contenido,
-    );
-    if (envioSmS) {
-      console.log("Sms Enviado");
-    }
     return usuario;
   }
+
 }
