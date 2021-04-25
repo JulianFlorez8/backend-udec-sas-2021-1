@@ -217,7 +217,6 @@ export class UsuariosController {
     }
     return usuario;
   }
-
   @post('/identificar', {
     responses: {
       '200': {
@@ -228,13 +227,15 @@ export class UsuariosController {
   async identificar(
     @requestBody({
       content: {
-        'aplication/json': {
+        'application/json': {
           schema: getModelSchemaRef(Credenciales),
         },
       },
     })
+
     credenciales: Credenciales,
   ): Promise<object> {
+    console.log(credenciales);
     let usuario = await this.usuariosRepository.findOne({
       where: {
         Usuario: credenciales.Usuario
@@ -264,7 +265,6 @@ export class UsuariosController {
     }
   }
 
-
   @post('/cambio-contrasena')
   @response(200, {
     description: 'Usuario model instance',
@@ -292,13 +292,9 @@ export class UsuariosController {
 
       let claveDescifrada = this.GeneralFS.DecifrarContrasena(usuario.Contrasena);
       if (claveDescifrada = claveDes) {
-
-
         let claveCifrada = this.GeneralFS.CifrarContrasena(cambioCont.nuevaContrasena);
         if (cambioCont.nuevaContrasena == cambioCont.confirmarContrasena) {
-
           usuario.Contrasena = claveCifrada;
-
         }
 
         await this.usuariosRepository.update(usuario);
