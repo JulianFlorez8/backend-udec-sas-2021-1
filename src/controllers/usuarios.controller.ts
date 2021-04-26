@@ -235,7 +235,6 @@ export class UsuariosController {
 
     credenciales: Credenciales,
   ): Promise<object> {
-    console.log(credenciales);
     let usuario = await this.usuariosRepository.findOne({
       where: {
         Usuario: credenciales.Usuario
@@ -245,8 +244,7 @@ export class UsuariosController {
       //Generar token
       let contra = usuario.Contrasena;
       let claveDecifrada = this.GeneralFS.DecifrarContrasena(contra);//decifrar clave del MySql
-      let cifrar = this.GeneralFS.CifrarContrasena(credenciales.contrasena);//Cifrar clave metida por el usuario
-      let decifrada = this.GeneralFS.DecifrarContrasena(cifrar);//Decifrar clave metida por el usuario
+      let decifrada = this.GeneralFS.DecifrarContrasena(credenciales.contrasena);//Decifrar clave metida por el usuario
       if (claveDecifrada == decifrada) {
         let token = this.servicioJWT.CrearTokenJWT(usuario);
         usuario.Contrasena = '';
