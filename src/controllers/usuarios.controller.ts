@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -40,7 +41,7 @@ export class UsuariosController {
     @service(JwtService)
     public servicioJWT: JwtService,
   ) { }
-  //@authenticate('administrador')
+  @authenticate('administrador')
   @post('/usuarios')
   @response(200, {
     description: 'Usuarios model instance',
@@ -136,7 +137,7 @@ export class UsuariosController {
   ): Promise<Usuarios> {
     return this.usuariosRepository.findById(id, filter);
   }
-
+  @authenticate('administrador')
   @patch('/usuarios/{id}')
   @response(204, {
     description: 'Usuarios PATCH success',

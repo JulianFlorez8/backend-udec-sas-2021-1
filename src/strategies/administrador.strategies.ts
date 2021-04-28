@@ -18,12 +18,14 @@ export class AdministradorStrategy implements AuthenticationStrategy {
       throw new HttpErrors[401]("No existe un token.")
     }
     let info = this.servicioJWT.VerificarToken(token);
+
     if (info) {
-      if (info.data.Rol == 'Administrador') {
+      if (info.data.role == 'Administrador') {
+
         let perfil: UserProfile = Object.assign({
-          id: info.data.Documento,
-          nombre_usuario: info.data.Nombre,
-          role: info.data.Rol
+          id: info.data.id,
+          nombre_usuario: info.data.nombre_Usuario,
+          role: info.data.Role
         });
         return perfil;
 
@@ -31,8 +33,12 @@ export class AdministradorStrategy implements AuthenticationStrategy {
         throw new HttpErrors[401]("Sin permiso de ejecutar esta acción.")
 
       }
+
     } else {
+
+      console.log("no valido")
       throw new HttpErrors[401]("El Token enviando no es valido.")
+
     }
 
   }

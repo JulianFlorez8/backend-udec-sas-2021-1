@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -25,7 +26,7 @@ export class BloqueController {
     @repository(BloqueRepository)
     public bloqueRepository : BloqueRepository,
   ) {}
-
+  @authenticate('administrador')
   @post('/bloques')
   @response(200, {
     description: 'Bloque model instance',
@@ -110,7 +111,7 @@ export class BloqueController {
   ): Promise<Bloque> {
     return this.bloqueRepository.findById(id, filter);
   }
-
+  @authenticate('administrador')
   @patch('/bloques/{id}')
   @response(204, {
     description: 'Bloque PATCH success',
