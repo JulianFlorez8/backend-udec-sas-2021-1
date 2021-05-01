@@ -15,6 +15,8 @@ export namespace keys {
   export const carpetaImagenCliente = "../../archivos/clientes";
   export const nombreCampoImagenCliente = "file";
   export const tamMaxImagenCliente = 1024 * 1024;
-
+  export const nombreCampoComprobante='file';
+  export const carpetaComprobantePago='../../archivos/comprobantes';
+  export const extensionesPermitidasComprobante: string[] = ['.PDF', '.docx'];
 }
 

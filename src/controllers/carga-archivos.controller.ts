@@ -134,7 +134,71 @@ export class CargaArchivoController {
       });
     });
   }
-  // PROXIMAMENTE SUBIR ARCHIVOS PLANOS PARA EL RECIBO DEL CLIENTE
+  // SUBIR ARCHIVOS PLANOS PARA EL RECIBO DEL CLIENTE
+  /**
+  *
+  * @param response
+  * @param request
+  */
+  @post('/CargarComprobantePago', {
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+            },
+          },
+        },
+        description: 'Función de carga de comprobante de pago.',
+      },
+    },
+  })
+  async comprobantePago(
+    @inject(RestBindings.Http.RESPONSE) response: Response,
+    @requestBody.file() request: Request,
+  ): Promise<object | false> {
+    const rutaComprobantePago = path.join(__dirname, llaves.carpetaComprobantePago);
+    let res = await this.SubirArchivoPlano(rutaComprobantePago, llaves.nombreCampoComprobante, request, response, llaves.extensionesPermitidasComprobante);
+    if (res) {
+      const nombre_archivo = response.req?.file.filename;
+      if (nombre_archivo) {
+        return {filename: nombre_archivo};
+      }
+    }
+    return res;
+  }
+
+  /**
+     * store the file in a specific path
+     * @param storePath
+     * @param request
+     * @param response
+     */
+  private SubirArchivoPlano(storePath: string, fieldname: string, request: Request, response: Response, acceptedExt: string[]): Promise<object> {
+    return new Promise<object>((resolve, reject) => {
+      const storage = this.GetMulterStorageConfig(storePath);
+      const upload = multer({
+        storage: storage,
+        fileFilter: function (req: any, file: any, callback: any) {
+          var ext = path.extname(file.originalname).toUpperCase();
+          if (acceptedExt.includes(ext)) {
+            return callback(null, true);
+          }
+          return callback(new HttpErrors[400]('El formato del archivo plano no es valido.'));
+        },
+        limits: {
+          //fileSize: llaves.tamMaxImagenProyecto//LIMITE DEL PDF
+        }
+      },
+      ).single(fieldname);
+      upload(request, response, (err: any) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(response);
+      });
+    });
+  }
 
 }
-
