@@ -30,7 +30,7 @@ export class PaisController {
     @repository(PaisRepository)
     public paisRepository: PaisRepository,
   ) { }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @post('/pais')
   @response(200, {
     description: 'Pais model instance',
@@ -80,7 +80,7 @@ export class PaisController {
   ): Promise<Pais[]> {
     return this.paisRepository.find(filter);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @patch('/pais')
   @response(200, {
     description: 'Pais PATCH success count',
@@ -99,7 +99,7 @@ export class PaisController {
   ): Promise<Count> {
     return this.paisRepository.updateAll(pais, where);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @get('/pais/{id}')
   @response(200, {
     description: 'Pais model instance',
@@ -115,7 +115,7 @@ export class PaisController {
   ): Promise<Pais> {
     return this.paisRepository.findById(id, filter);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @patch('/pais/{id}')
   @response(204, {
     description: 'Pais PATCH success',
@@ -133,7 +133,7 @@ export class PaisController {
   ): Promise<void> {
     await this.paisRepository.updateById(id, pais);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @put('/pais/{id}')
   @response(204, {
     description: 'Pais PUT success',
@@ -144,7 +144,7 @@ export class PaisController {
   ): Promise<void> {
     await this.paisRepository.replaceById(id, pais);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @del('/pais/{id}')
   @response(204, {
     description: 'Pais DELETE success',

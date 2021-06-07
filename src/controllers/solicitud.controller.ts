@@ -30,7 +30,7 @@ export class SolicitudController {
     @repository(SolicitudEstudioRepository)
     public solicitudEstudioRepository: SolicitudEstudioRepository,
   ) { }
-  @authenticate('vendedor')
+  @authenticate('Vendedor')
   @post('/solicitud-estudios')
   @response(200, {
     description: 'SolicitudEstudio model instance',
@@ -80,7 +80,7 @@ export class SolicitudController {
   ): Promise<SolicitudEstudio[]> {
     return this.solicitudEstudioRepository.find(filter);
   }
-  @authenticate('vendedor')
+  @authenticate('Vendedor')
   @patch('/solicitud-estudios')
   @response(200, {
     description: 'SolicitudEstudio PATCH success count',
@@ -99,7 +99,7 @@ export class SolicitudController {
   ): Promise<Count> {
     return this.solicitudEstudioRepository.updateAll(solicitudEstudio, where);
   }
-  @authenticate('vendedor')
+  @authenticate('Vendedor')
   @get('/solicitud-estudios/{id}')
   @response(200, {
     description: 'SolicitudEstudio model instance',
@@ -115,7 +115,7 @@ export class SolicitudController {
   ): Promise<SolicitudEstudio> {
     return this.solicitudEstudioRepository.findById(id, filter);
   }
-  @authenticate('vendedor')
+  @authenticate('Vendedor')
   @patch('/solicitud-estudios/{id}')
   @response(204, {
     description: 'SolicitudEstudio PATCH success',
@@ -133,7 +133,7 @@ export class SolicitudController {
   ): Promise<void> {
     await this.solicitudEstudioRepository.updateById(id, solicitudEstudio);
   }
-  @authenticate('vendedor')
+  @authenticate('Vendedor')
   @put('/solicitud-estudios/{id}')
   @response(204, {
     description: 'SolicitudEstudio PUT success',
@@ -144,7 +144,7 @@ export class SolicitudController {
   ): Promise<void> {
     await this.solicitudEstudioRepository.replaceById(id, solicitudEstudio);
   }
-  @authenticate('vendedor')
+  @authenticate('Vendedor')
   @del('/solicitud-estudios/{id}')
   @response(204, {
     description: 'SolicitudEstudio DELETE success',

@@ -41,7 +41,7 @@ export class UsuariosController {
     @service(JwtService)
     public servicioJWT: JwtService,
   ) { }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @post('/usuarios')
   @response(200, {
     description: 'Usuarios model instance',
@@ -137,7 +137,7 @@ export class UsuariosController {
   ): Promise<Usuarios> {
     return this.usuariosRepository.findById(id, filter);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @patch('/usuarios/{id}')
   @response(204, {
     description: 'Usuarios PATCH success',

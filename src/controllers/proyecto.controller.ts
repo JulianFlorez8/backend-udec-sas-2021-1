@@ -30,7 +30,7 @@ export class ProyectoController {
     @repository(ProyectosRepository)
     public proyectosRepository: ProyectosRepository,
   ) { }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @post('/proyectos')
   @response(200, {
     description: 'Proyectos model instance',
@@ -80,7 +80,7 @@ export class ProyectoController {
   ): Promise<Proyectos[]> {
     return this.proyectosRepository.find(filter);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @patch('/proyectos')
   @response(200, {
     description: 'Proyectos PATCH success count',
@@ -99,7 +99,7 @@ export class ProyectoController {
   ): Promise<Count> {
     return this.proyectosRepository.updateAll(proyectos, where);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @get('/proyectos/{id}')
   @response(200, {
     description: 'Proyectos model instance',
@@ -115,7 +115,7 @@ export class ProyectoController {
   ): Promise<Proyectos> {
     return this.proyectosRepository.findById(id, filter);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @patch('/proyectos/{id}')
   @response(204, {
     description: 'Proyectos PATCH success',
@@ -133,7 +133,7 @@ export class ProyectoController {
   ): Promise<void> {
     await this.proyectosRepository.updateById(id, proyectos);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @put('/proyectos/{id}')
   @response(204, {
     description: 'Proyectos PUT success',
@@ -144,7 +144,7 @@ export class ProyectoController {
   ): Promise<void> {
     await this.proyectosRepository.replaceById(id, proyectos);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @del('/proyectos/{id}')
   @response(204, {
     description: 'Proyectos DELETE success',

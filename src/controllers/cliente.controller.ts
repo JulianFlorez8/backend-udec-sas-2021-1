@@ -30,7 +30,7 @@ export class ClienteController {
     @repository(ClienteRepository)
     public clienteRepository: ClienteRepository,
   ) { }
-  @authenticate('vendedor')
+  @authenticate('Vendedor')
   @post('/clientes')
   @response(200, {
     description: 'Cliente model instance',
@@ -80,7 +80,7 @@ export class ClienteController {
   ): Promise<Cliente[]> {
     return this.clienteRepository.find(filter);
   }
-  @authenticate('vendedor')
+  @authenticate('Vendedor')
   @patch('/clientes')
   @response(200, {
     description: 'Cliente PATCH success count',
@@ -115,7 +115,7 @@ export class ClienteController {
   ): Promise<Cliente> {
     return this.clienteRepository.findById(id, filter);
   }
-  @authenticate('vendedor')
+  @authenticate('Vendedor')
   @patch('/clientes/{id}')
   @response(204, {
     description: 'Cliente PATCH success',
@@ -133,7 +133,7 @@ export class ClienteController {
   ): Promise<void> {
     await this.clienteRepository.updateById(id, cliente);
   }
-  @authenticate('vendedor')
+  @authenticate('Vendedor')
   @put('/clientes/{id}')
   @response(204, {
     description: 'Cliente PUT success',
@@ -144,7 +144,7 @@ export class ClienteController {
   ): Promise<void> {
     await this.clienteRepository.replaceById(id, cliente);
   }
-  @authenticate('vendedor')
+  @authenticate('Vendedor')
   @del('/clientes/{id}')
   @response(204, {
     description: 'Cliente DELETE success',

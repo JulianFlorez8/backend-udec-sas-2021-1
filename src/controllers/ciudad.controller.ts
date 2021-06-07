@@ -30,7 +30,7 @@ export class CiudadController {
     @repository(CiudadRepository)
     public ciudadRepository: CiudadRepository,
   ) { }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @post('/ciudads')
   @response(200, {
     description: 'Ciudad model instance',
@@ -80,7 +80,7 @@ export class CiudadController {
   ): Promise<Ciudad[]> {
     return this.ciudadRepository.find(filter);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @patch('/ciudads')
   @response(200, {
     description: 'Ciudad PATCH success count',
@@ -115,7 +115,7 @@ export class CiudadController {
   ): Promise<Ciudad> {
     return this.ciudadRepository.findById(id, filter);
   }
-  @authenticate('administrador')
+  @authenticate('Administrador')
   @patch('/ciudads/{id}')
   @response(204, {
     description: 'Ciudad PATCH success',
