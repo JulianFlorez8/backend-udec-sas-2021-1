@@ -36,7 +36,7 @@ export class AdministradorStrategy implements AuthenticationStrategy {
 
     } else {
 
-      console.log("no valido")
+      console.log("El Token enviando no es valido")
       throw new HttpErrors[401]("El Token enviando no es valido.")
 
     }

@@ -99,7 +99,6 @@ export class PaisController {
   ): Promise<Count> {
     return this.paisRepository.updateAll(pais, where);
   }
-  @authenticate('Administrador')
   @get('/pais/{id}')
   @response(200, {
     description: 'Pais model instance',

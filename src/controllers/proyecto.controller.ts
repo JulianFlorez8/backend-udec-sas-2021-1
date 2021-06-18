@@ -99,7 +99,6 @@ export class ProyectoController {
   ): Promise<Count> {
     return this.proyectosRepository.updateAll(proyectos, where);
   }
-  @authenticate('Administrador')
   @get('/proyectos/{id}')
   @response(200, {
     description: 'Proyectos model instance',
