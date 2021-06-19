@@ -1,3 +1,4 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -18,12 +19,19 @@ import {
   response,
 } from '@loopback/rest';
 import {Pagos} from '../models';
-import {PagosRepository} from '../repositories';
-
+import {ClienteRepository, PagosRepository, SolicitudEstudioRepository} from '../repositories';
+import {NotificacionService} from '../services';
+import {keys as llaves} from '../config/keys.js';
 export class PagosController {
   constructor(
     @repository(PagosRepository)
     public pagosRepository : PagosRepository,
+    @repository(SolicitudEstudioRepository)
+    public solicitudEstudioRepository: SolicitudEstudioRepository,
+    @service(NotificacionService)
+    public servicionNotificacion: NotificacionService,
+    @repository(ClienteRepository)
+    public clienteRepository: ClienteRepository,
   ) {}
 
   @post('/pagos')
@@ -37,14 +45,31 @@ export class PagosController {
         'application/json': {
           schema: getModelSchemaRef(Pagos, {
             title: 'NewPagos',
-            
+
           }),
         },
       },
     })
     pagos: Pagos,
   ): Promise<Pagos> {
+    let solicitud= await this.solicitudEstudioRepository.findById(pagos.codigoSolicitud, );//probar si funciona o nel
+    let contenido=`Se comunica que se ha realizado un pago por el valor de ${pagos.valor}`;
+    let DocumentoCliente=solicitud.documentoCliente;
+    let cliente= await this.clienteRepository.findById(DocumentoCliente, );//probar si funciona o nel
+    let correo=cliente.Correo;
+    let celularCliente= cliente.Celular;
+    console.log(contenido);
+    this.servicionNotificacion.EnviarEmail(
+      correo,
+      llaves.AsuntoPagoNuevo,
+      contenido
+    );
+    this.servicionNotificacion.EnviarSMS(
+      celularCliente,
+      contenido
+    );
     return this.pagosRepository.create(pagos);
+
   }
 
   @get('/pagos/count')

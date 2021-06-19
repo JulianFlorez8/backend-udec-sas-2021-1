@@ -27,7 +27,6 @@ import {SolicitudEstudio} from '../models';
 import {ClienteRepository, SolicitudEstudioRepository} from '../repositories';
 import {NotificacionService} from '../services';
 import {keys as llaves} from '../config/keys.js';
-import{ClienteController} from '../controllers/cliente.controller';
 
 export class SolicitudController {
   constructor(

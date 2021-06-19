@@ -19,5 +19,6 @@ export namespace keys {
   export const carpetaComprobantePago='../../archivos/comprobantes';
   export const extensionesPermitidasComprobante: string[] = ['.PDF', '.docx'];
   export const AsuntoDecisionSolicitud= 'Decisión tomada sobre solicitud de estudio';
+  export const AsuntoPagoNuevo= 'Pago nuevo Solicitud Estudio';
 }
 
