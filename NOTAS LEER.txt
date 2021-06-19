@@ -4,3 +4,5 @@ NOTAS LEER
 --> PONER ARRIBA DE CADA ACCION SOLO ME LIMITA DICHA ACCION
 @authenticate.skip()--> PARA NO APLICAR LA RESTRICION A DICHA ACCION
 @authenticate('vendedor')-->PONER DONDE LA ACCION LA PUEDA REALIZAR UN vendedor
+La estrategia vendedor no se donde se invoca :'v
+

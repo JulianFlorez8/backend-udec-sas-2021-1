@@ -19,11 +19,11 @@ export class VendedorStrategy implements AuthenticationStrategy {
     }
     let info = this.servicioJWT.VerificarToken(token);
     if (info) {
-      if (info.data.Rol == 'Vendedor') {
+      if (info.data.role == 'Vendedor') {
         let perfil: UserProfile = Object.assign({
           id: info.data.Documento,
           nombre_usuario: info.data.Nombre,
-          role: info.data.Rol
+          role: info.data.Role
         });
         return perfil;
 
