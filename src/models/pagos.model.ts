@@ -21,6 +21,12 @@ export class Pagos extends Entity {
   })
   recibo_consignacion: string;
 
+  @property({
+    type: 'number',
+    required: true,
+  })
+  valor: number;
+
   @belongsTo(() => SolicitudEstudio, {name: 'tiene2'})
   codigoSolicitud: number;
 
