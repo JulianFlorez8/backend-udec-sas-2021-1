@@ -1,4 +1,5 @@
 import {authenticate} from '@loopback/authentication';
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -23,12 +24,19 @@ import {
   response
 } from '@loopback/rest';
 import {SolicitudEstudio} from '../models';
-import {SolicitudEstudioRepository} from '../repositories';
+import {ClienteRepository, SolicitudEstudioRepository} from '../repositories';
+import {NotificacionService} from '../services';
+import {keys as llaves} from '../config/keys.js';
+import{ClienteController} from '../controllers/cliente.controller';
 
 export class SolicitudController {
   constructor(
     @repository(SolicitudEstudioRepository)
     public solicitudEstudioRepository: SolicitudEstudioRepository,
+    @service(NotificacionService)
+    public servicionNotificacion: NotificacionService,
+    @repository(ClienteRepository)
+    public clienteRepository: ClienteRepository,
   ) { }
   @authenticate('Vendedor')
   @post('/solicitud-estudios')
@@ -143,6 +151,27 @@ export class SolicitudController {
     @requestBody() solicitudEstudio: SolicitudEstudio,
   ): Promise<void> {
     await this.solicitudEstudioRepository.replaceById(id, solicitudEstudio);
+    let contenido=``;
+    if(solicitudEstudio.estado=="Aceptada")
+    {
+      contenido =`Se le comunica al usuario que la solicitud de estudio con codigo ${id}. <br />  Ha sido <strong> aceptada</strong> con éxito. <br /> Se le informa que apartir de ahora puede subir el/los pagos correspondientes.`;
+    }else{
+      contenido =`Lamentamos informar al usuario que la solicitud de estudio con codigo ${id}. <br />  Ha sido <strong> aceptada</strong>. <br /> Si desea puede solicitar una nueva solicitud de estudio para el inmueble buscado. `;
+    }
+    let DocumentoCliente=solicitudEstudio.documentoCliente;
+    let cliente= await this.clienteRepository.findById(DocumentoCliente, );//probar si funciona o nel
+    let correo=cliente.Correo;
+    let celularCliente= cliente.Celular;
+    console.log(contenido);
+    this.servicionNotificacion.EnviarEmail(
+      correo,
+      llaves.AsuntoDecisionSolicitud,
+      contenido
+    );
+    this.servicionNotificacion.EnviarSMS(
+      celularCliente,
+      contenido
+    );
   }
   @authenticate('Vendedor')
   @del('/solicitud-estudios/{id}')

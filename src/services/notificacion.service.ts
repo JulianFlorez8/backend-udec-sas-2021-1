@@ -25,7 +25,7 @@ export class NotificacionService {
       })
   }
 
-  EnviarSMS(telefonoDestino: string, mensaje: string) {
+  EnviarSMS(telefonoDestino: number, mensaje: string) {
     try {
       var accountSid = process.env.TWILIO_SID; // Your Account SID from www.twilio.com/console
       var authToken = process.env.TWILIO_TOKEN;   // Your Auth Token from www.twilio.com/console

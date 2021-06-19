@@ -209,8 +209,9 @@ export class UsuariosController {
       llaves.AsuntoActualizacionContrasena,
       contenido,
     );
+    let celular = parseInt(usuario.Celular);
     let envioSmS = this.servicionNotificacion.EnviarSMS(
-      usuario.Celular,
+      celular,
       contenido,
     );
     if (envioSmS) {
@@ -305,8 +306,9 @@ export class UsuariosController {
           llaves.AsuntoActualizacionContrasena,
           contenido,
         );
+        let celular = parseInt(usuario.Celular);
         let envioSmS = this.servicionNotificacion.EnviarSMS(
-          usuario.Celular,
+          celular,
           contenido,
         );
         if (envioSmS) {
