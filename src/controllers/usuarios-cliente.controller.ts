@@ -61,7 +61,7 @@ export class UsuariosClienteController {
           schema: getModelSchemaRef(Cliente, {
             title: 'NewClienteInUsuarios',
             exclude: ['Documento'],
-            optional: ['documentoUsuario']
+            optional: ['DocumentoUsuario']
           }),
         },
       },

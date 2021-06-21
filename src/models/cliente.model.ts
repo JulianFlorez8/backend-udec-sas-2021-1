@@ -17,7 +17,7 @@ import {Usuarios} from './usuarios.model';
         name: 'fk_usuarios_Id2',
         entity: 'Usuarios',
         entityKey: 'documento',
-        foreignKey: 'documentoUsuario',
+        foreignKey: 'DocumentoUsuario',
       },
       fk_ciudad_codigo: {
         name: 'fk_ciudad_codigo',
@@ -55,7 +55,7 @@ export class Cliente extends Entity {
   Apellido_2: string;
 
   @property({
-    type: 'date',
+    type: 'string',
     required: true,
   })
   Fecha_Nacimiento: string;
@@ -102,10 +102,10 @@ export class Cliente extends Entity {
   Nombre_Ref_Familiar: string;
 
   @property({
-    type: 'number',
+    type: 'string',
     required: true,
   })
-  Telefono_Ref_Familiar: number;
+  Telefono_Ref_Familiar: string;
 
   @property({
     type: 'string',
@@ -113,8 +113,14 @@ export class Cliente extends Entity {
   })
   Nombre_Ref_Personal: string;
 
+  @property({
+    type: 'string',
+    required: true,
+  })
+  Telefono_Ref_Personal: string;
+
   @belongsTo(() => Usuarios, {name: 'esAtendido'})
-  documentoUsuario: number;
+  DocumentoUsuario: number;
 
   @belongsTo(() => Ciudad, {name: 'pertenece'})
   codigoCiudad: number;

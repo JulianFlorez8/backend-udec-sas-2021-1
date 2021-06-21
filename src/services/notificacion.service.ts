@@ -24,7 +24,7 @@ export class NotificacionService {
         console.error()
       })
   }
-  
+
   EnviarSMS(telefonoDestino: string, mensaje: string) {
     try {
       var accountSid = process.env.TWILIO_SID; // Your Account SID from www.twilio.com/console
@@ -41,7 +41,7 @@ export class NotificacionService {
       return true;
     } catch {
       return false;
-    }
+        }
 
   }
 }

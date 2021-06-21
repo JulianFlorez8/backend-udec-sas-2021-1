@@ -87,10 +87,10 @@ export class Usuarios extends Entity {
   @belongsTo(() => Ciudad, {name: 'pertenece'})
   codigoCiudad: number;
 
-  @hasMany(() => Proyectos, {keyTo: 'documentoUsuario'})
+  @hasMany(() => Proyectos, {keyTo: 'DocumentoUsuario'})
   proyectos: Proyectos[];
 
-  @hasMany(() => Cliente, {keyTo: 'documentoUsuario'})
+  @hasMany(() => Cliente, {keyTo: 'DocumentoUsuario'})
   clientes: Cliente[];
 
   constructor(data?: Partial<Usuarios>) {

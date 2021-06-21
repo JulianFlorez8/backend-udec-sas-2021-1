@@ -61,7 +61,7 @@ export class UsuariosProyectosController {
           schema: getModelSchemaRef(Proyectos, {
             title: 'NewProyectosInUsuarios',
             exclude: ['codigo'],
-            optional: ['documentoUsuario']
+            optional: ['DocumentoUsuario']
           }),
         },
       },

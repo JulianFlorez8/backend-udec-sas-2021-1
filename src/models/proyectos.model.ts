@@ -10,7 +10,7 @@ import {Bloque} from './bloque.model';
         name: 'fk_usuarios_Id',
         entity: 'Usuarios',
         entityKey: 'documento',
-        foreignKey: 'documentoUsuario',
+        foreignKey: 'DocumentoUsuario',
       },
       fk_ciudad_codigo2: {
         name: 'fk_ciudad_codigo2',
@@ -46,7 +46,7 @@ export class Proyectos extends Entity {
   imagen?: string;
 
   @belongsTo(() => Usuarios, {name: 'administra'})
-  documentoUsuario: number;
+  DocumentoUsuario: number;
 
   @belongsTo(() => Ciudad, {name: 'pertenece'})
   codigoCiudad: number;
