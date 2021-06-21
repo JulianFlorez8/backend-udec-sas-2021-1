@@ -5,34 +5,38 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
+import {keys as llaves} from '../config/keys.js';
 import {Pagos} from '../models';
 import {ClienteRepository, PagosRepository, SolicitudEstudioRepository} from '../repositories';
 import {NotificacionService} from '../services';
-import {keys as llaves} from '../config/keys.js';
 export class PagosController {
   constructor(
     @repository(PagosRepository)
-    public pagosRepository : PagosRepository,
+    public pagosRepository: PagosRepository,
     @repository(SolicitudEstudioRepository)
     public solicitudEstudioRepository: SolicitudEstudioRepository,
     @service(NotificacionService)
     public servicionNotificacion: NotificacionService,
     @repository(ClienteRepository)
     public clienteRepository: ClienteRepository,
-  ) {}
+  ) { }
 
   @post('/pagos')
   @response(200, {
@@ -51,24 +55,51 @@ export class PagosController {
       },
     })
     pagos: Pagos,
-  ): Promise<Pagos> {
-    let solicitud= await this.solicitudEstudioRepository.findById(pagos.codigoSolicitud, );//probar si funciona o nel
-    let contenido=`Se comunica que se ha realizado un pago por el valor de ${pagos.valor}`;
-    let DocumentoCliente=solicitud.documentoCliente;
-    let cliente= await this.clienteRepository.findById(DocumentoCliente, );//probar si funciona o nel
-    let correo=cliente.Correo;
-    let celularCliente= cliente.Celular;
-    console.log(contenido);
-    this.servicionNotificacion.EnviarEmail(
-      correo,
-      llaves.AsuntoPagoNuevo,
-      contenido
-    );
-    this.servicionNotificacion.EnviarSMS(
-      celularCliente,
-      contenido
-    );
-    return this.pagosRepository.create(pagos);
+  ): Promise<Pagos> {//VERIFICAR Q NO SOBREPASE EL VALOR
+    let solicitud = await this.solicitudEstudioRepository.findById(pagos.codigoSolicitud,);//probar si funciona o nel
+    let pagosExistentes = await this.solicitudEstudioRepository.tiene(pagos.codigoSolicitud).find();
+    let valorPagado = 0;
+    pagosExistentes.forEach(
+      pag => {
+        valorPagado = valorPagado + pag.valor;
+      }
+    )
+    console.log(valorPagado);
+    let valorNuevo = valorPagado + pagos.valor;
+    if (solicitud.ofertaEconomica)
+      if (valorNuevo <= solicitud.ofertaEconomica) {
+        let contenido = `Se comunica que se ha realizado un pago por el valor de ${pagos.valor}`;
+        let DocumentoCliente = solicitud.documentoCliente;
+        let cliente = await this.clienteRepository.findById(DocumentoCliente,);//probar si funciona o nel
+        let correo = cliente.Correo;
+        let celularCliente = cliente.Celular;
+        console.log("enviando sms");
+        if (this.servicionNotificacion.EnviarSMS(
+          celularCliente,
+          contenido
+        )) {
+          console.log("mensaje enviado");
+        }
+        else {
+          console.log("mensaje NO enviado");
+        }
+
+        this.servicionNotificacion.EnviarEmail(
+          correo,
+          llaves.AsuntoPagoNuevo,
+          contenido
+        );
+
+        return this.pagosRepository.create(pagos);
+      }
+      else {
+        console.log("Error, Valor superado");
+        return this.pagosRepository.create(pagos);//ESTO ME DEBE VOTAR ERROR
+      }
+    else {
+      console.log("Error");
+      return this.pagosRepository.create(pagos);//ESTO ME DEBE VOTAR ERROR
+    }
 
   }
 

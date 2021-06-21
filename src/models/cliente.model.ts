@@ -3,7 +3,7 @@ import {
   Entity,
   hasMany,
   model,
-  property,
+  property
 } from '@loopback/repository';
 import {Ciudad} from './ciudad.model';
 import {Inmueble} from './inmueble.model';
@@ -66,10 +66,10 @@ export class Cliente extends Entity {
   Foto?: string;
 
   @property({
-    type: 'number',
+    type: 'string',
     required: true,
   })
-  Celular: number;
+  Celular: string;
 
   @property({
     type: 'string',
@@ -90,11 +90,10 @@ export class Cliente extends Entity {
   Total_Ingresos: number;
 
   @property({
-    type: 'array',
-    itemType: 'string',
+    type: 'string',
     required: true,
   })
-  Datos_Trabajo: string[];
+  Datos_Trabajo: string;
 
   @property({
     type: 'string',

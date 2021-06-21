@@ -24,22 +24,35 @@ export class NotificacionService {
         console.error()
       })
   }
+  EnviarSMS1(telefonoDestino: string, mensaje: string) {
+    const accountSid = 'AC77c8a8188dc0649154c47586597b95b5';
+    const authToken = 'ed706ff349613defdd61f90184a5541c';
+    const client = require('twilio')(accountSid, authToken);
 
-  EnviarSMS(telefonoDestino: number, mensaje: string) {
+    client.messages
+      .create({
+        body: mensaje,
+        messagingServiceSid: 'MGc7f1ac70f1ed705dc458e5179812c443',
+        to: '+573103694388'
+      })
+      .then((message: any) => console.log(message.sid))
+      .done();
+    return true;
+  }
+  EnviarSMS(telefonoDestino: string, mensaje: string) {
     try {
       var accountSid = process.env.TWILIO_SID; // Your Account SID from www.twilio.com/console
       var authToken = process.env.TWILIO_TOKEN;   // Your Auth Token from www.twilio.com/console
-      var client = new twilio(accountSid, authToken);
-
-      client.messages.create({
+      let telefonoDestinoString = '+57' + telefonoDestino;
+      var cliente = new twilio(accountSid, authToken);;//LINEA QUE FALLA
+      cliente.messages.create({
         body: mensaje,
-        to: telefonoDestino,  // Text this number
-        from: llaves.twilioPhone // From a valid Twilio number
-      }).then((message: any) => {
-        console.log(message.sid);
+        messagingServiceSid: llaves.twilioServicio,
+        to: telefonoDestinoString  // Text this number
 
-      });
-      return true
+      }).then((message: any) => console.log(message.sid))
+        .done();
+      return true;
     } catch {
       return false;
     }

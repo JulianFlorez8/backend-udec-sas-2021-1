@@ -209,7 +209,7 @@ export class UsuariosController {
       llaves.AsuntoActualizacionContrasena,
       contenido,
     );
-    let celular = parseInt(usuario.Celular);
+    let celular = usuario.Celular;
     let envioSmS = this.servicionNotificacion.EnviarSMS(
       celular,
       contenido,
@@ -306,7 +306,7 @@ export class UsuariosController {
           llaves.AsuntoActualizacionContrasena,
           contenido,
         );
-        let celular = parseInt(usuario.Celular);
+        let celular = usuario.Celular;
         let envioSmS = this.servicionNotificacion.EnviarSMS(
           celular,
           contenido,
