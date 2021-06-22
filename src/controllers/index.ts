@@ -27,6 +27,5 @@ export * from './usuarios-ciudad.controller';
 export * from './usuarios-cliente.controller';
 export * from './usuarios-proyectos.controller';
 export * from './usuarios.controller';
-
 export * from './carga-archivos.controller';
 export * from './descarga-archivos.controller';

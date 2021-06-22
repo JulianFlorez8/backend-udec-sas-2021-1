@@ -23,10 +23,10 @@ import {
   requestBody,
   response
 } from '@loopback/rest';
+import {keys as llaves} from '../config/keys.js';
 import {SolicitudEstudio} from '../models';
 import {ClienteRepository, SolicitudEstudioRepository} from '../repositories';
 import {NotificacionService} from '../services';
-import {keys as llaves} from '../config/keys.js';
 
 export class SolicitudController {
   constructor(
@@ -150,17 +150,16 @@ export class SolicitudController {
     @requestBody() solicitudEstudio: SolicitudEstudio,
   ): Promise<void> {
     await this.solicitudEstudioRepository.replaceById(id, solicitudEstudio);
-    let contenido=``;
-    if(solicitudEstudio.estado=="Aceptada")
-    {
-      contenido =`Se le comunica al usuario que la solicitud de estudio con codigo ${id}. <br />  Ha sido <strong> aceptada</strong> con éxito. <br /> Se le informa que apartir de ahora puede subir el/los pagos correspondientes.`;
-    }else{
-      contenido =`Lamentamos informar al usuario que la solicitud de estudio con codigo ${id}. <br />  Ha sido <strong> aceptada</strong>. <br /> Si desea puede solicitar una nueva solicitud de estudio para el inmueble buscado. `;
+    let contenido = ``;
+    if (solicitudEstudio.estado == "Aceptada") {
+      contenido = `Se le comunica al usuario que la solicitud de estudio con codigo ${id}. <br />  Ha sido <strong> aceptada</strong> con éxito. <br /> Se le informa que apartir de ahora puede subir el/los pagos correspondientes.`;
+    } else {
+      contenido = `Lamentamos informar al usuario que la solicitud de estudio con codigo ${id}. <br />  Ha sido <strong> aceptada</strong>. <br /> Si desea puede solicitar una nueva solicitud de estudio para el inmueble buscado. `;
     }
-    let DocumentoCliente=solicitudEstudio.documentoCliente;
-    let cliente= await this.clienteRepository.findById(DocumentoCliente, );//probar si funciona o nel
-    let correo=cliente.Correo;
-    let celularCliente= cliente.Celular;
+    let DocumentoCliente = solicitudEstudio.documentoCliente;
+    let cliente = await this.clienteRepository.findById(DocumentoCliente,);//probar si funciona o nel
+    let correo = cliente.Correo;
+    let celularCliente = cliente.Celular;
     console.log(contenido);
     this.servicionNotificacion.EnviarEmail(
       correo,
@@ -180,4 +179,53 @@ export class SolicitudController {
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.solicitudEstudioRepository.deleteById(id);
   }
+
+
+
+  @get('/solicitudes-en-estudio')
+  @response(200, {
+    description: 'Array of SolicitudEstudio model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(SolicitudEstudio, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async solicitudEstudio(
+    @param.filter(SolicitudEstudio) filter?: Filter<SolicitudEstudio>,
+  ): Promise<SolicitudEstudio[]> {
+    return this.solicitudEstudioRepository.find({
+      where: {estado: 'En Estudio'},
+    });
+
+  }
+
+  @get('/solicitud-estudios/{id}/inmueble')
+  @response(200, {
+    description: 'Array of SolicitudEstudio model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(SolicitudEstudio, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async solicitudInmueble(
+    @param.path.number('id') id: number,
+    @param.filter(SolicitudEstudio) filter?: Filter<SolicitudEstudio>,
+  ): Promise<SolicitudEstudio[]> {
+    return this.solicitudEstudioRepository.find({
+      where: {
+        codigoInmueble: id,
+        estado: 'En Estudio'
+      },
+    });
+
+  }
+
 }

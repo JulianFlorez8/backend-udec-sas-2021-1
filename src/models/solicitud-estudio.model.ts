@@ -1,4 +1,4 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 import {Pagos} from './pagos.model';
 
 @model({
@@ -28,7 +28,7 @@ export class SolicitudEstudio extends Entity {
   codigo?: number;
 
   @property({
-    type: 'date',
+    type: 'string',
   })
   fechaSolicitud?: string;
 
