@@ -11,6 +11,7 @@ import fs from 'fs';
 import path from 'path';
 import {promisify} from 'util';
 import {keys as llaves} from '../config/keys';
+import {Archivo} from '../models';
 
 const readdir = promisify(fs.readdir);
 
@@ -85,6 +86,9 @@ export class DescargaArchivoController {
 
       case 2:
         filePath = path.join(__dirname, llaves.carpetaImagenCliente);
+        break;
+      case 3:
+        filePath = path.join(__dirname, llaves.carpetaComprobantePago);
     }
     return filePath;
   }
@@ -99,6 +103,22 @@ export class DescargaArchivoController {
     if (resolved.startsWith(archivo)) return resolved;
     // The resolved file is outside sandbox
     throw new HttpErrors[400](`La ruta del archivo no es válida: ${folder}`);
+  }
+  @get('/fileRuta/{type}/{filename}')
+  @oas.response.file()
+  async RutaArchivo(
+    @param.path.number('type') type: number,
+    @param.path.string('filename') filename: string,
+    @inject(RestBindings.Http.RESPONSE) response: Response,
+  ): Promise<Archivo> {
+    const rutaCarpeta = this.GetFolderPathByType(type);
+    const archivo = this.ValidateFileName(rutaCarpeta, filename);
+    response.download(archivo, rutaCarpeta);
+    let ruta = archivo.toString();
+    let retorno = new Archivo();
+    retorno.ruta = ruta;
+    //console.log(retorno);
+    return retorno;
   }
 }
 
