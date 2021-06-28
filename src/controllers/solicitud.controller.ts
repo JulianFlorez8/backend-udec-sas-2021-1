@@ -106,7 +106,7 @@ export class SolicitudController {
   ): Promise<Count> {
     return this.solicitudEstudioRepository.updateAll(solicitudEstudio, where);
   }
-  @authenticate('Vendedor')
+  //@authenticate('Vendedor')
   @get('/solicitud-estudios/{id}')
   @response(200, {
     description: 'SolicitudEstudio model instance',
@@ -223,6 +223,29 @@ export class SolicitudController {
       where: {
         codigoInmueble: id,
         estado: 'En Estudio'
+      },
+    });
+
+  }
+  @get('/solicitud-estudios/{id}/cliente')
+  @response(200, {
+    description: 'Array of SolicitudEstudio model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(SolicitudEstudio, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async solicitudCliente(
+    @param.path.number('id') id: number,
+    @param.filter(SolicitudEstudio) filter?: Filter<SolicitudEstudio>,
+  ): Promise<SolicitudEstudio[]> {
+    return this.solicitudEstudioRepository.find({
+      where: {
+        documentoCliente: id
       },
     });
 
