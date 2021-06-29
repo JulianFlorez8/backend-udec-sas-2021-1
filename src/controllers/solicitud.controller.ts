@@ -227,6 +227,29 @@ export class SolicitudController {
     });
 
   }
+  @get('/solicitudes/{id}/inmueble')
+  @response(200, {
+    description: 'Array of SolicitudEstudio model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(SolicitudEstudio, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async solicitudesInmueble(
+    @param.path.number('id') id: number,
+    @param.filter(SolicitudEstudio) filter?: Filter<SolicitudEstudio>,
+  ): Promise<SolicitudEstudio[]> {
+    return this.solicitudEstudioRepository.find({
+      where: {
+        codigoInmueble: id
+      },
+    });
+
+  }
   @get('/solicitud-estudios/{id}/cliente')
   @response(200, {
     description: 'Array of SolicitudEstudio model instances',
