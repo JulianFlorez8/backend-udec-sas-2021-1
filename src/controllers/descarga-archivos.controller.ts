@@ -110,7 +110,7 @@ export class DescargaArchivoController {
     @param.path.number('type') type: number,
     @param.path.string('filename') filename: string,
     @inject(RestBindings.Http.RESPONSE) response: Response,
-  ): Promise<Archivo> {
+  ): Promise<string> {
     const rutaCarpeta = this.GetFolderPathByType(type);
     const archivo = this.ValidateFileName(rutaCarpeta, filename);
     response.download(archivo, rutaCarpeta);
@@ -118,7 +118,7 @@ export class DescargaArchivoController {
     let retorno = new Archivo();
     retorno.ruta = ruta;
     //console.log(retorno);
-    return retorno;
+    return filename;
   }
 }
 

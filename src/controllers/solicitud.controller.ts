@@ -273,5 +273,25 @@ export class SolicitudController {
     });
 
   }
+  @get('/solicitudes-Aceptadas')
+  @response(200, {
+    description: 'Array of SolicitudEstudio model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(SolicitudEstudio, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async solicitudEstudioAceptadas(
+    @param.filter(SolicitudEstudio) filter?: Filter<SolicitudEstudio>,
+  ): Promise<SolicitudEstudio[]> {
+    return this.solicitudEstudioRepository.find({
+      where: {estado: 'Aceptada'},
+    });
+
+  }
 
 }
