@@ -18,7 +18,8 @@ export class AdministradorStrategy implements AuthenticationStrategy {
       throw new HttpErrors[401]("No existe un token.")
     }
     let info = this.servicioJWT.VerificarToken(token);
-
+    console.log(info);
+    
     if (info) {
       if (info.data.role == 'Administrador') {
 
@@ -36,8 +37,8 @@ export class AdministradorStrategy implements AuthenticationStrategy {
 
     } else {
 
-      console.log("El Token enviando no es valido")
-      throw new HttpErrors[401]("El Token enviando no es valido.")
+      console.log("El Token enviando no es valido Admin")
+      throw new HttpErrors[401]("El Token enviando no es valido Admin.")
 
     }
 

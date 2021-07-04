@@ -99,7 +99,6 @@ export class InmuebleController {
   ): Promise<Count> {
     return this.inmuebleRepository.updateAll(inmueble, where);
   }
-  @authenticate('Administrador')
   @get('/inmuebles/{id}')
   @response(200, {
     description: 'Inmueble model instance',

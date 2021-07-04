@@ -32,7 +32,7 @@ export class VendedorStrategy implements AuthenticationStrategy {
 
       }
     } else {
-      throw new HttpErrors[401]("El Token enviando no es valido.")
+      throw new HttpErrors[401]("El Token enviando no es valido vendedor.")
     }
 
   }
